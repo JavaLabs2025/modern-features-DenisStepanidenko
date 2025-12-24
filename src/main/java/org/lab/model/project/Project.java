@@ -2,6 +2,7 @@ package org.lab.model.project;
 
 import org.lab.model.milestone.Milestone;
 import org.lab.model.milestone.MilestoneStatus;
+import org.lab.model.report.Report;
 import org.lab.model.role.Developer;
 import org.lab.model.role.Manager;
 import org.lab.model.role.QA;
@@ -23,9 +24,15 @@ public class Project {
 
     private Set<User> developers = new HashSet<>();
 
+    private String description;
+
     private Set<User> qa = new HashSet<>();
 
     private LinkedList<Milestone> milestones = new LinkedList<>();
+
+    private List<Report> reports = new ArrayList<>();
+
+
 
     private Milestone currentMilestone;
 
@@ -37,14 +44,13 @@ public class Project {
      *
      * @param user пользователь, от имени которого создаётся проект (он будет менеджером)
      */
-    public static Project create(User user) {
+    public Project(User user, String description) {
 
-        Project project = new Project();
-        project.projectId = UUID.randomUUID().toString();
-        project.manager = user;
-        user.addProject(project.projectId, new Manager());
+        projectId = UUID.randomUUID().toString();
+        manager = user;
+        this.description = description;
+        user.addProject(this, new Manager());
 
-        return project;
     }
 
     /**
@@ -60,7 +66,7 @@ public class Project {
         }
 
         this.teamLead = teamLead;
-        teamLead.addProject(projectId, new TeamLead());
+        teamLead.addProject(this, new TeamLead());
 
     }
 
@@ -76,7 +82,7 @@ public class Project {
         }
 
         this.developers.add(developer);
-        developer.addProject(projectId, new Developer());
+        developer.addProject(this, new Developer());
 
     }
 
@@ -92,7 +98,7 @@ public class Project {
         }
 
         this.qa.add(qa);
-        qa.addProject(projectId, new QA());
+        qa.addProject(this, new QA());
 
     }
 
@@ -166,7 +172,7 @@ public class Project {
      */
     public Ticket addTicket(User user, String description) {
 
-        if (!user.equals(this.manager) || !(Objects.nonNull(teamLead) && teamLead.equals(user))) {
+        if (!user.equals(this.manager) && !(Objects.nonNull(teamLead) && teamLead.equals(user))) {
             String errorMessage = String.format("User with name: %s and id: %s is not a manager or teamLead of project with id: %s. Insufficient permissions to perform this action.", user.getFullName(), user.getId(), projectId);
             System.out.println(errorMessage);
             return null;
@@ -185,7 +191,46 @@ public class Project {
 
     }
 
+    /**
+     * Здесь разработчик или тестировщик может создать bug-report
+     */
+    public Report addReport(User createdUser, User fixedUser, String description) {
+
+        Report report = new Report(description, createdUser, fixedUser, this);
+        reports.add(report);
+
+        return report;
+
+    }
+
+
     public Set<User> getDevelopers() {
         return developers;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public LinkedList<Milestone> getMilestones() {
+        return milestones;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Project project = (Project) o;
+        return Objects.equals(projectId, project.projectId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(projectId);
+    }
+
+    public List<Report> getReports() {
+        return reports;
+    }
+
 }

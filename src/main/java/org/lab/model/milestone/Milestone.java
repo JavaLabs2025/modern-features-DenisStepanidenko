@@ -45,4 +45,13 @@ public class Milestone {
         return tickets;
     }
 
+    @Override
+    public String toString() {
+        return "Milestone{" +
+                "startDate=" + startDate +
+                ", milestoneId='" + milestoneId + '\'' +
+                ", endDate=" + endDate +
+                ", status=" + status +
+                '}';
+    }
 }

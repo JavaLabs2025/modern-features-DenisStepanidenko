@@ -43,6 +43,10 @@ public class Ticket {
         return status;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     /**
      * Привязка разработчика к тикету.
      */
@@ -112,5 +116,8 @@ public class Ticket {
 
     }
 
+    public Set<User> getDevelopers() {
+        return developers;
+    }
 
 }

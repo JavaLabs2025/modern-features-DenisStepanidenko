@@ -10,7 +10,6 @@ public class UserService {
 
     private Map<String, User> users;
 
-
     public UserService() {
         users = new HashMap<>();
     }

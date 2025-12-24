@@ -1,8 +1,10 @@
 package org.lab.model.user;
 
+import org.lab.model.project.Project;
 import org.lab.model.role.Role;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class User {
@@ -21,7 +23,7 @@ public class User {
      * <projectId, список ролей>
      * Список ролей в разных проектах. (допускается в одном проекте иметь несколько ролей)
      */
-    private Map<String, Set<Role>> roles = new HashMap<>();
+    private Map<Project, Set<Role>> roles = new HashMap<>();
 
 
     public User(String fullName) {
@@ -32,10 +34,83 @@ public class User {
     /**
      * Назначить роль в проекте.
      */
-    public void addProject(String projectId, Role role) {
+    public void addProject(Project project, Role role) {
 
-        Set<Role> currentRoles = roles.computeIfAbsent(projectId, k -> new HashSet<>());
+        Set<Role> currentRoles = roles.computeIfAbsent(project, k -> new HashSet<>());
         currentRoles.add(role);
+
+    }
+
+    /**
+     * Просмотреть все проекты
+     */
+    public void viewAllProjects() {
+
+        for (Map.Entry<Project, Set<Role>> entry : roles.entrySet()) {
+
+            System.out.printf(
+                    "Project: %s | Roles: %s%n",
+                    entry.getKey().getDescription(),
+                    entry.getValue().stream()
+                            .map(Role::getRoleName)
+                            .collect(Collectors.joining(", "))
+            );
+
+        }
+
+    }
+
+    /**
+     * Просмотреть все задачи
+     */
+    public void viewAllTasks() {
+
+        System.out.println("User: " + fullName);
+
+        roles.forEach((project, _) -> {
+            System.out.println("Project: " + project.getDescription());
+
+
+            project.getMilestones().forEach(milestone -> {
+                System.out.println("Milestone " + milestone.getMilestoneId());
+                System.out.println("Tasks:");
+
+                milestone.getTickets().stream()
+                        .filter(ticket -> ticket.getDevelopers().contains(this))
+                        .map(ticket -> "Description: " + ticket.getDescription())
+                        .forEach(System.out::println);
+
+                System.out.println("--------------");
+            });
+
+
+            System.out.println("Reports");
+            project.getReports().stream()
+                    .filter(report -> report.getCreatedUser().equals(this))
+                    .map(report -> "Description: " + report.getDescription())
+                    .forEach(System.out::println);
+
+            System.out.println("--------------");
+        });
+
+
+    }
+
+    public void viewAllReport() {
+
+        System.out.println("User: " + fullName);
+
+        roles.forEach((project, _) -> {
+            System.out.println("Project: " + project.getDescription());
+
+            System.out.println("Reports");
+            project.getReports().stream()
+                    .filter(report -> report.getFixedUser().equals(this))
+                    .map(report -> "Description: " + report.getDescription())
+                    .forEach(System.out::println);
+
+            System.out.println("--------------");
+        });
 
     }
 
@@ -49,18 +124,6 @@ public class User {
 
     public String getFullName() {
         return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public Map<String, Set<Role>> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Map<String, Set<Role>> roles) {
-        this.roles = roles;
     }
 
     @Override
