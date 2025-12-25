@@ -119,4 +119,19 @@ public class Report {
         return fixedUser;
     }
 
+    @Override
+    public String toString() {
+        return STR."""
+             Report [
+                ID: \{reportId}
+                Description: \{description}
+                Status:  \{status}
+                Created by: \{createdUser.getFullName()}
+                Assigned to: \{fixedUser.getFullName()}
+                Project: \{project.getDescription()}
+            ]
+            """;
+    }
+
+
 }

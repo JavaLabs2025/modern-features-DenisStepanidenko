@@ -33,11 +33,7 @@ public class Project {
     private List<Report> reports = new ArrayList<>();
 
 
-
     private Milestone currentMilestone;
-
-    private Project() {
-    }
 
     /**
      * Создание проекта пользователем.
@@ -60,7 +56,12 @@ public class Project {
 
         if (!manager.equals(this.manager)) {
 
-            String errorMessage = String.format("User with name: %s and id: %s is not a manager of project with id: %s. Insufficient permissions to perform this action.", manager.getFullName(), manager.getId(), projectId);
+            String errorMessage = StringTemplate.STR."""
+                User with name: \{manager.getFullName()}
+                and id: \{manager.getId()}
+                is not a manager of project with id: \{projectId}.
+                Insufficient permissions to perform this action.
+                """;
             System.out.println(errorMessage);
             return;
         }
@@ -76,7 +77,12 @@ public class Project {
     public void attachDeveloper(User manager, User developer) {
 
         if (!manager.equals(this.manager)) {
-            String errorMessage = String.format("User with name: %s and id: %s is not a manager of project with id: %s. Insufficient permissions to perform this action.", manager.getFullName(), manager.getId(), projectId);
+            String errorMessage = StringTemplate.STR."""
+                User with name: \{manager.getFullName()}
+                and id: \{manager.getId()}
+                is not a manager of project with id: \{projectId}.
+                Insufficient permissions to perform this action.
+                """;
             System.out.println(errorMessage);
             return;
         }
@@ -92,7 +98,12 @@ public class Project {
     public void attachQa(User manager, User qa) {
 
         if (!manager.equals(this.manager)) {
-            String errorMessage = String.format("User with name: %s and id: %s is not a manager of project with id: %s. Insufficient permissions to perform this action.", manager.getFullName(), manager.getId(), projectId);
+            String errorMessage = StringTemplate.STR."""
+                User with name: \{manager.getFullName()}
+                and id: \{manager.getId()}
+                is not a manager of project with id: \{projectId}.
+                Insufficient permissions to perform this action.
+                """;
             System.out.println(errorMessage);
             return;
         }
@@ -111,7 +122,12 @@ public class Project {
     public void attachMilestone(User manager, LocalDate start, LocalDate finish) {
 
         if (!manager.equals(this.manager)) {
-            String errorMessage = String.format("User with name: %s and id: %s is not a manager of project with id: %s. Insufficient permissions to perform this action.", manager.getFullName(), manager.getId(), projectId);
+            String errorMessage = StringTemplate.STR."""
+                User with name: \{manager.getFullName()}
+                and id: \{manager.getId()}
+                is not a manager of project with id: \{projectId}.
+                Insufficient permissions to perform this action.
+                """;
             System.out.println(errorMessage);
             return;
         }
@@ -133,7 +149,12 @@ public class Project {
     public void changeMilestoneStatus(User manager, MilestoneStatus newStatus) {
 
         if (!manager.equals(this.manager)) {
-            String errorMessage = String.format("User with name: %s and id: %s is not a manager of project with id: %s. Insufficient permissions to perform this action.", manager.getFullName(), manager.getId(), projectId);
+            String errorMessage = StringTemplate.STR."""
+                User with name: \{manager.getFullName()}
+                and id: \{manager.getId()}
+                is not a manager of project with id: \{projectId}.
+                Insufficient permissions to perform this action.
+                """;
             System.out.println(errorMessage);
             return;
         }
@@ -173,7 +194,12 @@ public class Project {
     public Ticket addTicket(User user, String description) {
 
         if (!user.equals(this.manager) && !(Objects.nonNull(teamLead) && teamLead.equals(user))) {
-            String errorMessage = String.format("User with name: %s and id: %s is not a manager or teamLead of project with id: %s. Insufficient permissions to perform this action.", user.getFullName(), user.getId(), projectId);
+            String errorMessage = StringTemplate.STR."""
+                User with name: \{manager.getFullName()}
+                and id: \{manager.getId()}
+                is not a manager of project with id: \{projectId}.
+                Insufficient permissions to perform this action.
+                """;
             System.out.println(errorMessage);
             return null;
         }
@@ -201,6 +227,28 @@ public class Project {
 
         return report;
 
+    }
+
+    public ProjectStatus getStats() {
+
+        int totalTickets = milestones.stream()
+                .mapToInt(m -> m.getTickets().size())
+                .sum();
+
+        int completedTickets = milestones.stream()
+                .flatMap(m -> m.getTickets().stream())
+                .filter(t -> t.getStatus() == TicketStatus.COMPLETED)
+                .toList()
+                .size();
+
+        return new ProjectStatus(
+                description,
+                totalTickets,
+                completedTickets,
+                totalTickets - completedTickets,
+                developers.size(),
+                qa.size()
+        );
     }
 
 

@@ -20,7 +20,8 @@ dependencies {
 }
 
 application {
-    mainClass = 'org.lab.Main'
+
+
 
     applicationDefaultJvmArgs = [
             '-Dfile.encoding=UTF-8',
@@ -32,12 +33,12 @@ application {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(24)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs += ['--enable-preview', '--release', '24']
+    options.compilerArgs += ['-Xlint:preview', '--enable-preview']
 }
 
 tasks.withType(JavaExec).configureEach {

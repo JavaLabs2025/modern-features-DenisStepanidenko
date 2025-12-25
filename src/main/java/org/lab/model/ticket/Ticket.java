@@ -93,6 +93,7 @@ public class Ticket {
 
         }
 
+
         status = TicketStatus.ACTIVE;
 
 
@@ -116,8 +117,28 @@ public class Ticket {
 
     }
 
+    public String getStatusDescription() {
+        return switch(status) {
+            case NEW -> "New task";
+            case ACCEPTED -> "Accepted for work";
+            case ACTIVE -> "In progress";
+            case COMPLETED -> "Completed";
+        };
+    }
+
     public Set<User> getDevelopers() {
         return developers;
     }
+
+    @Override
+    public String toString() {
+        return StringTemplate.STR."""
+            Ticket: \{description}
+            Status: \{getStatusDescription()}
+            Developers: \{developers.size()}
+            Created by: \{createdUser.getFullName()}
+            """;
+    }
+
 
 }

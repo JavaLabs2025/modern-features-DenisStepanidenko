@@ -1,3 +1,5 @@
+
+
 import org.lab.model.milestone.MilestoneStatus;
 import org.lab.model.project.Project;
 import org.lab.model.report.Report;
@@ -5,8 +7,8 @@ import org.lab.model.ticket.Ticket;
 import org.lab.model.user.User;
 import org.lab.service.UserService;
 
-import java.io.IO;
-import java.lang.classfile.attribute.ModuleAttribute;
+
+
 import java.time.LocalDate;
 
 void main() {
@@ -15,10 +17,10 @@ void main() {
     User manager = userService.registerUser("Manager");
 
 
-    // создание проекта
+
     Project project1 = new Project(manager, "Valhalla");
 
-    // создание команды
+
     User developer1 = userService.registerUser("Developer1");
     User developer2 = userService.registerUser("Developer2");
     User developer3 = userService.registerUser("Developer3");
@@ -29,7 +31,7 @@ void main() {
 
     User teamLead = userService.registerUser("TeamLead");
 
-    // назначение ролей
+
 
     project1.attachTeamLead(manager, teamLead);
 
@@ -41,13 +43,16 @@ void main() {
     project1.attachQa(manager, qa2);
     project1.attachQa(manager, qa3);
 
-    // создание первого milestone
+
     project1.attachMilestone(manager, LocalDate.now(), LocalDate.now().plusDays(15));
     project1.changeMilestoneStatus(manager, MilestoneStatus.ACTIVE);
 
     Ticket ticket1 = project1.addTicket(manager, "Ticket1");
     Ticket ticket2 = project1.addTicket(manager, "Ticket2");
     Ticket ticket3 = project1.addTicket(teamLead, "Ticket3");
+
+    System.out.println(project1.getStats());
+
 
     ticket1.addDeveloper(manager, developer1);
     ticket2.addDeveloper(manager, developer2);
@@ -61,9 +66,6 @@ void main() {
     ticket2.finishTicket(developer2);
     ticket3.finishTicket(developer3);
 
-    System.out.println("Status of ticket1: " + ticket1.getStatus());
-    System.out.println("Status of ticket2: " + ticket2.getStatus());
-    System.out.println("Status of ticket3: " + ticket3.getStatus());
 
 
     Report report1 = project1.addReport(qa1, developer1, "bug-report1");
@@ -83,7 +85,7 @@ void main() {
     report3.closeReport(qa3);
 
 
-    // каждый может просмотреть все проекты, в которых он участвует
+ 
     manager.viewAllProjects();
     teamLead.viewAllProjects();
     developer1.viewAllProjects();

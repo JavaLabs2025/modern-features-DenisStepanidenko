@@ -77,7 +77,6 @@ public class User {
 
                 milestone.getTickets().stream()
                         .filter(ticket -> ticket.getDevelopers().contains(this))
-                        .map(ticket -> "Description: " + ticket.getDescription())
                         .forEach(System.out::println);
 
                 System.out.println("--------------");
@@ -87,7 +86,6 @@ public class User {
             System.out.println("Reports");
             project.getReports().stream()
                     .filter(report -> report.getCreatedUser().equals(this))
-                    .map(report -> "Description: " + report.getDescription())
                     .forEach(System.out::println);
 
             System.out.println("--------------");
