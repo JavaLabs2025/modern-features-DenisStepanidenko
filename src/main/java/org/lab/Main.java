@@ -85,7 +85,7 @@ void main() {
     report3.closeReport(qa3);
 
 
- 
+
     manager.viewAllProjects();
     teamLead.viewAllProjects();
     developer1.viewAllProjects();

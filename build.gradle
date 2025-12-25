@@ -21,7 +21,7 @@ dependencies {
 
 application {
 
-
+    mainClass = 'Main'
 
     applicationDefaultJvmArgs = [
             '-Dfile.encoding=UTF-8',

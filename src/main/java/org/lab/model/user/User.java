@@ -46,17 +46,16 @@ public class User {
      */
     public void viewAllProjects() {
 
-        for (Map.Entry<Project, Set<Role>> entry : roles.entrySet()) {
+        roles.forEach((project, roleSet) -> {
+            String rolesStr = roleSet.stream()
+                    .map(Role::getRoleName)
+                    .collect(Collectors.joining(", "));
 
-            System.out.printf(
-                    "Project: %s | Roles: %s%n",
-                    entry.getKey().getDescription(),
-                    entry.getValue().stream()
-                            .map(Role::getRoleName)
-                            .collect(Collectors.joining(", "))
-            );
-
-        }
+            System.out.println(STR."""
+            Project: \{project.getDescription()}
+            Roles: \{rolesStr}
+            """);
+        });
 
     }
 
